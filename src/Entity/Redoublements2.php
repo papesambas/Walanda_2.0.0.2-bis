@@ -35,9 +35,13 @@ class Redoublements2
     #[ORM\OneToMany(mappedBy: 'redoublement2', targetEntity: Redoublements3::class)]
     private Collection $redoublements3s;
 
+    #[ORM\OneToMany(mappedBy: 'redoublement2', targetEntity: Eleves::class)]
+    private Collection $eleves;
+
     public function __construct()
     {
         $this->redoublements3s = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
     }
 
     public function __toString()
@@ -134,6 +138,36 @@ class Redoublements2
             // set the owning side to null (unless already changed)
             if ($redoublements3->getRedoublement2() === $this) {
                 $redoublements3->setRedoublement2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(Eleves $elefe): static
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves->add($elefe);
+            $elefe->setRedoublement2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(Eleves $elefe): static
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getRedoublement2() === $this) {
+                $elefe->setRedoublement2(null);
             }
         }
 

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Trait\CreatedAtTrait;
 use App\Entity\Trait\SlugTrait;
 use App\Repository\ClassesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -35,6 +37,14 @@ class Classes
     #[ORM\ManyToOne(inversedBy: 'classes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Niveaux $niveau = null;
+
+    #[ORM\OneToMany(mappedBy: 'classe', targetEntity: Eleves::class)]
+    private Collection $eleves;
+
+    public function __construct()
+    {
+        $this->eleves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -102,6 +112,36 @@ class Classes
     public function setNiveau(?Niveaux $niveau): static
     {
         $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(Eleves $elefe): static
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves->add($elefe);
+            $elefe->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(Eleves $elefe): static
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getClasse() === $this) {
+                $elefe->setClasse(null);
+            }
+        }
 
         return $this;
     }

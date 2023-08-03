@@ -13,7 +13,7 @@ class MeresFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Faker\Factory::create('fr_FR');
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 120; $i++) {
             $profession  = $this->getReference('profession_' . $faker->numberBetween(150, 300));
             $nina  = $this->getReference('nina_' . $faker->numberBetween(1, 450));
             $telephone  = $this->getReference('telephone_' . $faker->numberBetween(120, 300));

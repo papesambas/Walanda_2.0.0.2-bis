@@ -49,6 +49,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Eleves $eleves = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +166,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getEleves(): ?Eleves
+    {
+        return $this->eleves;
+    }
+
+    public function setEleves(?Eleves $eleves): static
+    {
+        $this->eleves = $eleves;
 
         return $this;
     }

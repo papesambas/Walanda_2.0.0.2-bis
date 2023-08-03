@@ -32,9 +32,13 @@ class Departements
     #[ORM\ManyToMany(targetEntity: Niveaux::class, inversedBy: 'departements')]
     private Collection $niveau;
 
+    #[ORM\OneToMany(mappedBy: 'departement', targetEntity: Eleves::class)]
+    private Collection $eleves;
+
     public function __construct()
     {
         $this->niveau = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
     }
 
     public function __toString()
@@ -79,6 +83,36 @@ class Departements
     public function removeNiveau(Niveaux $niveau): static
     {
         $this->niveau->removeElement($niveau);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(Eleves $elefe): static
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves->add($elefe);
+            $elefe->setDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(Eleves $elefe): static
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getDepartement() === $this) {
+                $elefe->setDepartement(null);
+            }
+        }
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatedAtTrait;
 use App\Repository\Scolarites1Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: Scolarites1Repository::class)]
 class Scolarites1
 {
+    use CreatedAtTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,12 +36,16 @@ class Scolarites1
     #[ORM\OneToMany(mappedBy: 'scolarite1', targetEntity: Redoublements3::class)]
     private Collection $redoublements3s;
 
+    #[ORM\OneToMany(mappedBy: 'scolarite1', targetEntity: Eleves::class)]
+    private Collection $eleves;
+
     public function __construct()
     {
         $this->scolarites2s = new ArrayCollection();
         $this->redoublements1s = new ArrayCollection();
         $this->redoublements2s = new ArrayCollection();
         $this->redoublements3s = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
     }
 
     public function __toString()
@@ -191,6 +197,36 @@ class Scolarites1
             // set the owning side to null (unless already changed)
             if ($redoublements3->getScolarite1() === $this) {
                 $redoublements3->setScolarite1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(Eleves $elefe): static
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves->add($elefe);
+            $elefe->setScolarite1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(Eleves $elefe): static
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getScolarite1() === $this) {
+                $elefe->setScolarite1(null);
             }
         }
 

@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20230803094717 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE eleves DROP date_naissance, DROP date_extrait, DROP date_inscription, DROP date_recrutement');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE eleves ADD date_naissance DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', ADD date_extrait DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', ADD date_inscription DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', ADD date_recrutement DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\'');
+    }
+}

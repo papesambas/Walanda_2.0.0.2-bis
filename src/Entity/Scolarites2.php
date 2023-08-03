@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatedAtTrait;
 use App\Repository\Scolarites2Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: Scolarites2Repository::class)]
 class Scolarites2
 {
+    use CreatedAtTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,11 +36,15 @@ class Scolarites2
     #[ORM\OneToMany(mappedBy: 'scolarite2', targetEntity: Redoublements3::class)]
     private Collection $redoublements3s;
 
+    #[ORM\OneToMany(mappedBy: 'scolarite2', targetEntity: Eleves::class)]
+    private Collection $eleves;
+
     public function __construct()
     {
         $this->redoublements1s = new ArrayCollection();
         $this->redoublements2s = new ArrayCollection();
         $this->redoublements3s = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
     }
 
     public function __toString()
@@ -172,6 +178,36 @@ class Scolarites2
             // set the owning side to null (unless already changed)
             if ($redoublements3->getScolarite2() === $this) {
                 $redoublements3->setScolarite2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(Eleves $elefe): static
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves->add($elefe);
+            $elefe->setScolarite2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(Eleves $elefe): static
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getScolarite2() === $this) {
+                $elefe->setScolarite2(null);
             }
         }
 

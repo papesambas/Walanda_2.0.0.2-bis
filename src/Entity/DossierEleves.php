@@ -20,6 +20,10 @@ class DossierEleves
     #[ORM\Column(length: 255)]
     private ?string $designation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'dossierEleves')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Eleves $eleves = null;
+
     public function __toString()
     {
         return $this->designation;
@@ -38,6 +42,18 @@ class DossierEleves
     public function setDesignation(string $designation): static
     {
         $this->designation = $designation;
+
+        return $this;
+    }
+
+    public function getEleves(): ?Eleves
+    {
+        return $this->eleves;
+    }
+
+    public function setEleves(?Eleves $eleves): static
+    {
+        $this->eleves = $eleves;
 
         return $this;
     }

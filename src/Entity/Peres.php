@@ -43,9 +43,13 @@ class Peres
     #[ORM\OneToOne(inversedBy: 'peres', cascade: ['persist', 'remove'])]
     private ?Ninas $nina = null;
 
+    #[ORM\OneToMany(mappedBy: 'pere', targetEntity: Eleves::class)]
+    private Collection $enfants;
+
     public function __construct()
     {
         $this->telephones = new ArrayCollection();
+        $this->enfants = new ArrayCollection();
     }
 
     public function __toString()
@@ -156,6 +160,36 @@ class Peres
     public function setNina(?Ninas $nina): static
     {
         $this->nina = $nina;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEnfants(): Collection
+    {
+        return $this->enfants;
+    }
+
+    public function addEnfant(Eleves $enfant): static
+    {
+        if (!$this->enfants->contains($enfant)) {
+            $this->enfants->add($enfant);
+            $enfant->setPere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnfant(Eleves $enfant): static
+    {
+        if ($this->enfants->removeElement($enfant)) {
+            // set the owning side to null (unless already changed)
+            if ($enfant->getPere() === $this) {
+                $enfant->setPere(null);
+            }
+        }
 
         return $this;
     }

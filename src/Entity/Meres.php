@@ -43,9 +43,13 @@ class Meres
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
+    #[ORM\OneToMany(mappedBy: 'mere', targetEntity: Eleves::class)]
+    private Collection $enfants;
+
     public function __construct()
     {
         $this->telephones = new ArrayCollection();
+        $this->enfants = new ArrayCollection();
     }
 
     public function __toString()
@@ -156,6 +160,36 @@ class Meres
     public function setAdresse(?string $adresse): static
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Eleves>
+     */
+    public function getEnfants(): Collection
+    {
+        return $this->enfants;
+    }
+
+    public function addEnfant(Eleves $enfant): static
+    {
+        if (!$this->enfants->contains($enfant)) {
+            $this->enfants->add($enfant);
+            $enfant->setMere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnfant(Eleves $enfant): static
+    {
+        if ($this->enfants->removeElement($enfant)) {
+            // set the owning side to null (unless already changed)
+            if ($enfant->getMere() === $this) {
+                $enfant->setMere(null);
+            }
+        }
 
         return $this;
     }
